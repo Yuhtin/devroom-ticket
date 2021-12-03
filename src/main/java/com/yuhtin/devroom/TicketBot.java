@@ -1,5 +1,6 @@
 package com.yuhtin.devroom;
 
+import com.yuhtin.devroom.command.CloseTicketCommand;
 import com.yuhtin.devroom.configuration.YamlConfiguration;
 import com.yuhtin.devroom.core.Bot;
 import com.yuhtin.devroom.listeners.BotReady;
@@ -21,7 +22,10 @@ public class TicketBot extends Bot {
             try {
                 if (file.createNewFile()) {
                     YamlConfiguration.createDefault().write(file);
-                    getLogger().info("Created the configuration file");
+                    getLogger().info("Created the configuration file!");
+                    getLogger().info("Configure the token and start the bot again!");
+
+                    System.exit(0);
                 }
             } catch (Exception exception) {
                 getLogger().info("Error when creating the configuration file.");
@@ -39,7 +43,7 @@ public class TicketBot extends Bot {
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                    .addEventListeners(new BotReady())
+                    .addEventListeners(new BotReady(), new CloseTicketCommand())
                     .build();
 
             jda.upsertCommand("ticket", "Open a new ticket").queue();
