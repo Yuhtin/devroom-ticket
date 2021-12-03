@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '6.0.0'
+}
+
+mainClassName = 'com.yuhtin.devroom.TicketBot'
+group 'com.yuhtin'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://m2.dv8tion.net/releases' }
+}
+
+dependencies {
+    implementation('net.dv8tion:JDA:4.3.0_331') {
+        exclude module: 'opus-java'
+    }
+
+    implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.14.1'
+    implementation 'com.google.guava:guava:30.1.1-jre'
+
+    def lombok = 'org.projectlombok:lombok:1.18.20'
+    compileOnly lombok
+    annotationProcessor lombok
+}
+
+shadowJar {
+    archiveName("${project.name}-${project.version}.jar")
+}
+
+compileJava {
+    options.encoding('UTF-8')
+
+    sourceCompatibility('1.8')
+    targetCompatibility('1.8')
+}
