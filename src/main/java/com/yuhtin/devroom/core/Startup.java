@@ -10,8 +10,10 @@ public class Startup {
     public static void main(String[] args) {
         Bot bot = new TicketBot();
         try {
+            bot.onLoad();
+
             bot.onEnable();
-            bot.getLogger().info("[3/3] Registered Commands, Events, Timers and others");
+            bot.getLogger().info("Bot started successfully.");
         } catch (Exception exception) {
             exception.printStackTrace();
             bot.onDisable();
@@ -22,7 +24,7 @@ public class Startup {
         Runtime.getRuntime().addShutdownHook(new Thread(bot::onDisable));
 
         Scanner scanner = new Scanner(System.in);
-        while (scanner.nextLine().equalsIgnoreCase("stop")) { // shit code to support minecraft hosts rofl
+        while (scanner.hasNext() && scanner.nextLine().equalsIgnoreCase("stop")) { // shit code to support minecraft hosts rofl
             new Thread(bot::onDisable).start();
         }
     }
