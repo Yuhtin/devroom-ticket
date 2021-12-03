@@ -1,4 +1,16 @@
 package com.yuhtin.devroom;
 
-public class TicketBot {
+import com.yuhtin.devroom.core.Bot;
+
+public class TicketBot extends Bot {
+
+    @Override
+    public void onEnable() {
+
+    }
+
+    @Override
+    public void onDisable() {
+
+    }
 }
