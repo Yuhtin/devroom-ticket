@@ -1,17 +1,19 @@
 package com.yuhtin.devroom;
 
 import com.yuhtin.devroom.command.CloseTicketCommand;
+import com.yuhtin.devroom.command.TicketCommand;
 import com.yuhtin.devroom.configuration.YamlConfiguration;
 import com.yuhtin.devroom.core.Bot;
 import com.yuhtin.devroom.listeners.BotReady;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 import javax.security.auth.login.LoginException;
-import java.io.*;
+import java.io.File;
 
 public class TicketBot extends Bot {
 
@@ -43,11 +45,13 @@ public class TicketBot extends Bot {
                     .setMemberCachePolicy(MemberCachePolicy.ALL)
                     .setChunkingFilter(ChunkingFilter.ALL)
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
-                    .addEventListeners(new BotReady(), new CloseTicketCommand())
+                    .addEventListeners(getEventWaiter(), new BotReady(), new TicketCommand(), new CloseTicketCommand())
                     .build();
 
-            jda.upsertCommand("ticket", "Open a new ticket").queue();
-            jda.upsertCommand("close", "(MODERATION) Close ticket").queue();
+            CommandData ticket = new CommandData("ticket", "Open a new ticket");
+            CommandData close = new CommandData("close", "(MODERATION) Close ticket");
+
+            jda.updateCommands().addCommands(ticket, close).queue();
 
             getLogger().info("JDA connection pending");
         } catch (LoginException exception) {

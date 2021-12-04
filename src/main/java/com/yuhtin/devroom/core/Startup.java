@@ -7,8 +7,9 @@ import java.util.Scanner;
 
 public class Startup {
 
+    @Getter private static final TicketBot bot = new TicketBot();
+
     public static void main(String[] args) {
-        Bot bot = new TicketBot();
         try {
             bot.onLoad();
 

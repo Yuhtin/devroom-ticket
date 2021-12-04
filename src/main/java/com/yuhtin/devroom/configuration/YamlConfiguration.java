@@ -17,8 +17,7 @@ import java.util.Map;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class YamlConfiguration {
 
-    @Getter
-    private final Map<String, Object> entries;
+    @Getter private final Map<String, Object> entries;
 
     public static YamlConfiguration of(File file) {
         try {
@@ -32,7 +31,9 @@ public class YamlConfiguration {
     public static YamlConfiguration createDefault() {
         return new YamlConfiguration(new HashMap<String, Object>() {{
             put("token", "0000011111");
-            put("ticketTypes", Arrays.asList("Payments", "Bug", "Other"));
+            put("ticketTypes", Arrays.asList("Payments#💵", "Bug#🔧", "Other#🤝"));
+            put("ticketCategoryID", 0L);
+            put("supportRoleID", 0L);
         }});
     }
 
