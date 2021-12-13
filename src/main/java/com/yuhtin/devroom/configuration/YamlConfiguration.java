@@ -1,23 +1,24 @@
 package com.yuhtin.devroom.configuration;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.Button;
+import net.dv8tion.jda.api.interactions.components.Component;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class YamlConfiguration {
 
     @Getter private final Map<String, Object> entries;
+    @Getter private final List<ActionRow> menus = new ArrayList<>();
 
     public static YamlConfiguration of(File file) {
         try {
@@ -31,7 +32,7 @@ public class YamlConfiguration {
     public static YamlConfiguration createDefault() {
         return new YamlConfiguration(new HashMap<String, Object>() {{
             put("token", "0000011111");
-            put("ticketTypes", Arrays.asList("Payments#💵", "Bug#🔧", "Other#🤝"));
+            put("ticketTypes", Arrays.asList("Payments", "Bug", "Other"));
             put("ticketCategoryID", 0L);
             put("supportRoleID", 0L);
         }});
@@ -47,6 +48,24 @@ public class YamlConfiguration {
 
     public Object getObject(String path) {
         return entries.getOrDefault(path, null);
+    }
+
+    public void buildMenu() {
+        List<Component> tempList = new ArrayList<>();
+        List<String> ticketTypes = getStringList("ticketTypes");
+        for (String entry : ticketTypes) {
+            tempList.add(Button.success(entry.toLowerCase(), entry));
+
+            if (tempList.size() == 5) {
+                menus.add(ActionRow.of(tempList));
+                tempList.clear();
+            }
+        }
+
+        if (tempList.isEmpty()) return;
+
+        menus.add(ActionRow.of(tempList));
+        tempList.clear();
     }
 
     public void write(File file) {

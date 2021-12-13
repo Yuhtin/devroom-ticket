@@ -4,7 +4,6 @@ import com.yuhtin.devroom.TicketBot;
 import com.yuhtin.devroom.configuration.YamlConfiguration;
 import com.yuhtin.devroom.core.Startup;
 import com.yuhtin.devroom.util.EventWaiter;
-import com.yuhtin.devroom.util.Logger;
 import lombok.val;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -15,13 +14,10 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
@@ -30,6 +26,7 @@ public class TicketCommand extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent command) {
+        System.out.println("VAI TOMAR NO CU");
         if (!command.getName().equals("ticket")) return;
 
         TicketBot bot = Startup.getBot();
@@ -52,13 +49,8 @@ public class TicketCommand extends ListenerAdapter {
             return;
         }
 
-        List<Component> components = new ArrayList<>();
-        for (String entries : config.getStringList("ticketTypes")) {
-            components.add(Button.success(entries.toLowerCase(), entries));
-        }
-
-        command.reply("🛎️ Select the ticket type below")
-                .addActionRow(components)
+        command.reply("📫 Creating a ticket...")
+                .addActionRows(config.getMenus())
                 .setEphemeral(true)
                 .queue();
 

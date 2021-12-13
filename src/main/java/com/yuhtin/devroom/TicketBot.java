@@ -9,8 +9,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.utils.ChunkingFilter;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
@@ -36,22 +35,22 @@ public class TicketBot extends Bot {
         }
 
         setConfig(YamlConfiguration.of(file));
+        getConfig().buildMenu();
     }
 
     @Override
     public void onEnable() {
         try {
             JDA jda = JDABuilder.createDefault(getConfig().getString("token"))
-                    .setMemberCachePolicy(MemberCachePolicy.ALL)
-                    .setChunkingFilter(ChunkingFilter.ALL)
-                    .enableIntents(GatewayIntent.GUILD_MEMBERS)
+                    .enableIntents(GatewayIntent.GUILD_MESSAGES)
                     .addEventListeners(getEventWaiter(), new BotReady(), new TicketCommand(), new CloseTicketCommand())
                     .build();
 
-            CommandData ticket = new CommandData("ticket", "Open a new ticket");
-            CommandData close = new CommandData("close", "(MODERATION) Close ticket");
+            CommandListUpdateAction commands = jda.updateCommands();
+            commands.addCommands(new CommandData("ticket", "Open a new ticket"));
+            commands.addCommands(new CommandData("close", "(MODERATION) Close ticket"));
 
-            jda.updateCommands().addCommands(ticket, close).queue();
+            commands.queue();
 
             getLogger().info("JDA connection pending");
         } catch (LoginException exception) {

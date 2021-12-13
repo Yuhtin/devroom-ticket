@@ -1,6 +1,5 @@
 package com.yuhtin.devroom.command;
 
-import com.yuhtin.devroom.util.Logger;
 import com.yuhtin.devroom.util.TicketUtils;
 import lombok.val;
 import net.dv8tion.jda.api.Permission;
