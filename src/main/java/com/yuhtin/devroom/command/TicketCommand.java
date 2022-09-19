@@ -26,7 +26,6 @@ public class TicketCommand extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(@NotNull SlashCommandEvent command) {
-        System.out.println("VAI TOMAR NO CU");
         if (!command.getName().equals("ticket")) return;
 
         TicketBot bot = Startup.getBot();
